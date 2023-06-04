@@ -4,20 +4,8 @@ export const navItems = [
       url: "/",
     },
     {
-      title: "Best Selling",
-      url: "/best-selling",
-    },
-    {
       title: "Products",
       url: "/products",
-    },
-    {
-      title: "Events",
-      url: "/events",
-    },
-    {
-      title: "FAQ",
-      url: "/faq",
     },
   ];
   
@@ -65,34 +53,6 @@ export const navItems = [
           ></path>
           <path
             d="M11.8164 7.18164H34.9982"
-            stroke="#FFBB38"
-            stroke-width="2"
-            stroke-miterlimit="10"
-            stroke-linecap="square"
-          ></path>
-        </svg>
-      ),
-    },
-    {
-      id: 2,
-      title: "Daily Surprise Offers",
-      Description: "Save up to 25% off",
-      icon: (
-        <svg
-          width="32"
-          height="34"
-          viewBox="0 0 32 34"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M31 17.4502C31 25.7002 24.25 32.4502 16 32.4502C7.75 32.4502 1 25.7002 1 17.4502C1 9.2002 7.75 2.4502 16 2.4502C21.85 2.4502 26.95 5.7502 29.35 10.7002"
-            stroke="#FFBB38"
-            stroke-width="2"
-            stroke-miterlimit="10"
-          ></path>
-          <path
-            d="M30.7 2L29.5 10.85L20.5 9.65"
             stroke="#FFBB38"
             stroke-width="2"
             stroke-miterlimit="10"
@@ -315,6 +275,7 @@ export const navItems = [
         },
         ratings: 4.2,
       },
+      price: 1099,
       discount_price: 1099,
       rating: 5,
       total_sell: 80,
@@ -322,7 +283,7 @@ export const navItems = [
       category:"Mobile & Tablets"
     },
     {
-      id: 1,
+      id: 3,
       category:"Computers and Laptop",
       name: "MacBook pro M2 chipset 256gb ssd 8gb ram space gray color with apple 1 year warranty",
       description:
@@ -415,7 +376,7 @@ export const navItems = [
       category:"Shoes"
     },
     {
-      id: 1,
+      id: 6,
       name: "Gaming Headphone Asus with mutiple color and free delivery",
       description:
         "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make an informed decision about the product they are interested in buying. A well-written product description can also be a powerful marketing tool that can help to increase sales.Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers to understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
@@ -454,7 +415,7 @@ export const navItems = [
       category:"Music and Gaming"
     },
     {
-      id: 4,
+      id: 7,
       name: "New Fashionable Watch for men 2023 with multiple colors",
       description:
         "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make an informed decision about the product they are interested in buying. A well-written product description can also be a powerful marketing tool that can help to increase sales.Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers to understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
@@ -483,7 +444,7 @@ export const navItems = [
       stock: 10,
     },
     {
-      id: 1,
+      id: 8,
       name: "Gaming Headphone Asus with mutiple color and free delivery",
       description:
         "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make an informed decision about the product they are interested in buying. A well-written product description can also be a powerful marketing tool that can help to increase sales.Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers to understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
@@ -521,7 +482,7 @@ export const navItems = [
       stock: 10,
     },
     {
-      id: 2,
+      id: 9,
       category:"Mobile and Tablets",
       name: "Iphone 14 pro max 256 gb ssd and 8 gb ram silver colour",
       description:
@@ -550,7 +511,7 @@ export const navItems = [
       stock: 10,
     },
     {
-      id: 1,
+      id: 10,
       category:"Music and Gaming",
       name: "Gaming Headphone Asus with mutiple color and free delivery",
       description:

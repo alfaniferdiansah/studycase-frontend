@@ -1,38 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 import { server } from "../../server";
 import axios from "axios";
 
-const DropDown = ({ categories, setDropDown }) => {
-  const [name, setName] = useState("");
-  const navigate = useNavigate();
+const DropDown = ({ selectCategory }) => {
+  const [categories, setCategory] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    axios.get(`${server}/category`,{
-      name
-    })
+  useEffect(() => {
+    console.log('test Drop effect');
+    axios.get(`${server}/category`)
       .then(function (response) {
-        navigate(`/product?category=${name.name}`);
-        window.location.reload();
-        console.log(response);
+        setCategory(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  };
+  }, []);
 
   return (
-    <div className="pb-4 w-[270px] bg-[#fff] absolute z-30 rounded-b-md shadow-sm">
+    <div className="pb-4 w-[270px] bg-[#fbgff] absolute z-30 rounded-b-md shadow-sm">
       {categories &&
-        categories.map((i, index) => (
+        categories.map((item, index) => (
           <div
             key={index}
             className={`${styles.normalFlex}`}
-            onClick={() => handleSubmit(i)}
+            onClick={() => selectCategory(item._id)}
           >
-            <h3 className="m-3 cursor-pointer select-none">{i.name}</h3>
+            <h3 className="m-3 flex  cursor-pointer select-none">{item.name}</h3>
           </div>
         ))}
     </div>
