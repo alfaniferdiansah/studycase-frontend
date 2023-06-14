@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { brandingData, categoriesData } from "../../../static/data";
+import { brandingData } from "../../../static/data";
 import styles from "../../../styles/styles";
-import { useSelector } from "react-redux";
+import axios from "axios";
+import { server } from "../../../server";
 
 const Tags = () => {
-  const { allTags } = useSelector((state) => state.tag);
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${server}/tag`)
+      .then(function (response) {
+        setData(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <>
       <div className={`${styles.section} hidden sm:block`}>
@@ -25,16 +38,20 @@ const Tags = () => {
             ))}
         </div>
       </div>
-
+      <div className={`${styles.section}`}>
+        <div className={`${styles.heading}`}>
+          <h1>All Tags</h1>
+        </div>
+      </div>
       <div
         className={`${styles.section} bg-[hsl(27,96%,53%)] p-6 rounded-lg mb-12`}
         id="categories"
       >
         <div className="grid grid-cols-1 gap-[5px] md:grid-cols-2 md:gap-[10px] lg:grid-cols-4 lg:gap-[20px] xl:grid-cols-5 xl:gap-[30px]">
-          { categoriesData &&
-            categoriesData.map((item) => {
+          {data &&
+            data.map((item) => {
               const handleSubmit = (item) => {
-                navigate(`/products?tag=${item.title}`);
+                navigate(`/product?tag=${item.name}`);
               };
               return (
                 <div
@@ -42,7 +59,9 @@ const Tags = () => {
                   key={item}
                   onClick={() => handleSubmit(item)}
                 >
-                  <h5 className={`font-bold text-[18px] leading-[1.3]`}>{item.title}</h5>
+                  <h5 className={`font-bold text-[18px] leading-[1.3]`}>
+                    {item.name}
+                  </h5>
                 </div>
               );
             })}

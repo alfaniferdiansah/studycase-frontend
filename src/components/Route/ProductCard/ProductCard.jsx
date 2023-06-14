@@ -7,6 +7,7 @@ import { AiFillHeart, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart } from
 import { toast } from 'react-toastify';
 import { addTocart } from '../../../redux/actions/cart';
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard.jsx";
+import { server } from '../../../server';
 
 const ProductCard = ({data}) => {
   const [click, setClick] = useState(false);
@@ -31,6 +32,7 @@ const ProductCard = ({data}) => {
   const addToWishlistHandler = (data) => {
     setClick(!click);
     dispatch(addToWishlist(data));
+    toast.success("Item added to wishlist successfully!");
   };
 
   const addToCartHandler = (id) => {
@@ -48,35 +50,33 @@ const ProductCard = ({data}) => {
     }
   };
 
-  const d = data.name
-  const name = d.replace(/\s+/g, "-")
+  const name = data.name
+  const nameProduct = name.replace(/\s+/g, "-")
+  
   return (
     <>
-      <div className="w-full h-[310px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
+      <div className="w-full h-[340px] bg-white rounded-lg shadow-sm p-3 relative">
         <div className="flex justify-end"></div>
-        <Link to={`/product/${name}`}>
           <img
-            src={`${data.image_Url[0].url}`}
+            src={`${data.image}`}
             alt=""
-            className="w-full h-[170px] object-contain"
+            className="w-full h-[170px] object-contain pr-5 pl-1"
           />
-        </Link>
-        <Link to={`/product/${name}`}>
-          <h4 className="pb-3 mt-4 font-[500]">
-            {data.name.length > 40 ? data.name.slice(0, 50) + "..." : data.name}
+          <h4 className="pb-1 font-bold">
+            {data.name.length > 30 ? data.name.slice(0, 30) + "..." : data.name}
           </h4>
-
+          <h4 className="pb-3 font-[500]">
+            {data.description.length > 30 ? data.description.slice(0, 30) + "..." : data.description}
+          </h4>
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
               <h5 className={`${styles.pricebold}`}>
-                Rp. 
-                {data.price}
+                {data.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
               </h5>
             </div>
           </div> 
-        </Link>
 
-        <div>
+        <div className='cursor-pointer'>
           {click ? (
             <AiFillHeart
               size={22}

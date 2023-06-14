@@ -1,42 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "../../styles/styles";
 import logo from "../../Assests/image/yandex.png";
-import { productData } from "../../static/data";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { BiMenuAltLeft } from "react-icons/bi";
+import { FaUserCircle, FaUserSlash } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
-import { CgProfile } from "react-icons/cg";
 import DropDown from "./DropDown.jsx";
 import axios from "axios";
 import { server } from "../../server";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "./Navbar.jsx";
+import { selectAuth } from "../../redux/userSelector";
+import Cart from "../Cart/Cart.jsx";
+import Wishlist from "../Wishlist/Wishlist.jsx";
 
 const Header = ({ activeHeading }) => {
-  // const [authenticate, user] = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-  const { allProduct } = useSelector((state) => state.product);
-  // const { allCategories } = useSelector((state) => state.category);
+  const [product, setProduct] = useState([]);
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
+  const auth = useSelector(selectAuth)
+
+  useEffect(() => {
+    axios
+      .get(`${server}/product`)
+      .then(function (response) {
+        setProduct(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
     const filteredProducts =
-      allProduct &&
-      allProduct.filter((product) =>
+      product &&
+      product.filter((product) =>
         product.name.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filteredProducts);
@@ -76,7 +88,7 @@ const Header = ({ activeHeading }) => {
               className="absolute right-2 top-1.5 cursor-pointer"
             />
             {searchData && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+              <div className="absolute w-[90%] min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
                 {searchData &&
                   searchData.map((i, index) => {
                     return (
@@ -91,9 +103,9 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
           <div className={`${styles.button}`}>
-            <Link to="/add-product">
+            <Link to="/sign-up">
               <h1 className="text-[#fff] flex items-center">
-                {"Add Product"}
+                {"Sign Up"}
                 <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
@@ -143,7 +155,7 @@ const Header = ({ activeHeading }) => {
             </div>
             <div className={`${styles.normalFlex}`}>
               <div
-                className="relative cursor-pointer mr-[15px]"
+                className="relative cursor-pointer mr-[25px]"
                 onClick={() => setOpenCart(true)}
               >
                 <AiOutlineShoppingCart
@@ -157,18 +169,23 @@ const Header = ({ activeHeading }) => {
             </div>
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer">
-                <Link to="/login">
-                  <CgProfile size={30} color="rgb(255 255 255 / 83%)" />
-                </Link>
+                {auth ? (
+                  <Link to="/profile">
+                    <FaUserCircle size={29} color="rgb(255 255 255 / 83%)" />
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <FaUserSlash size={29} color="rgb(255 255 255 / 83%)" />
+                  </Link>
+                )}
               </div>
             </div>
 
-            {/* {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+            {openCart ? ( <Cart setOpenCart={setOpenCart} /> ) : null}
 
             {openWishlist ? (
               <Wishlist setOpenWishlist={setOpenWishlist} />
-            ) : null} */}
-            
+            ) : null}
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ export const navItems = [
     },
     {
       title: "Products",
-      url: "/products",
+      url: "/product",
     },
   ];
   
@@ -566,15 +566,9 @@ export const navItems = [
     {
       name: "Our Blog",
     },
-    {
-      name: "Reviews",
-    },
   ];
   
   export const footercompanyLinks = [
-    {
-      name: "Game & Video",
-    },
     {
       name: "Phone &Tablets",
     },
@@ -584,25 +578,13 @@ export const navItems = [
     {
       name: "Sport Watches",
     },
-    {
-      name: "Events",
-    },
   ];
   
   export const footerSupportLinks = [
-    {
-      name: "FAQ",
-    },
-    {
-      name: "Reviews",
-    },
     {
       name: "Contact Us",
     },
     {
       name: "Shipping",
-    },
-    {
-      name: "Live chat",
     },
   ];
