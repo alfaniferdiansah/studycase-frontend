@@ -11,7 +11,6 @@ import { setAuth, setLoading, setToken, setUser } from "../../redux/actions/user
 
 const Login = () => {
   const dispatch = useDispatch();
-  const auth = useSelector(selectAuth);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState("");
@@ -28,7 +27,7 @@ const Login = () => {
         dispatch(setToken(response.data.data.token));
         console.log(response);
         window.location.reload(true);
-
+        toast.success("Login success!!");
     })
     .catch(function (error) {
         // handle error
@@ -40,17 +39,8 @@ const Login = () => {
     });
   }
 
-  if(window.location.reload === true) {
-    toast.success("Login success!!")
-  }
-
   return (
     <>
-      {/* {loading ? (
-        <Spinner animation="border" role="status" color="black">
-          <span className="visually-hidden" color="black">Loading...</span>
-        </Spinner>
-      ) : null} */}
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { server } from "../../server";
+import { selectAuth } from "../../redux/userSelector";
 
 const Cart = ({ setOpenCart }) => {
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const auth = useSelector(selectAuth);
 
   const removeFromCartHandler = (data) => {
     dispatch(removeFromCart(data));
@@ -67,7 +69,7 @@ const Cart = ({ setOpenCart }) => {
                   ))}
               </div>
             </div>
-
+            {auth ? (
             <div className="px-5 mb-3">
               {/* checkout buttons */}
               <Link to="/checkout">
@@ -80,6 +82,20 @@ const Cart = ({ setOpenCart }) => {
                 </div>
               </Link>
             </div>
+            ): (
+              <div className="px-5 mb-3">
+              {/* checkout buttons */}
+              <Link to="/login">
+                <div
+                  className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
+                >
+                  <h1 className="text-[#fff] text-[18px] font-[600]">
+                    Checkout Now {totalPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                  </h1>
+                </div>
+              </Link>
+            </div>
+            )}
           </>
         )}
       </div>

@@ -7,7 +7,6 @@ import { AiFillHeart, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart } from
 import { toast } from 'react-toastify';
 import { addTocart } from '../../../redux/actions/cart';
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard.jsx";
-import { server } from '../../../server';
 
 const ProductCard = ({data}) => {
   const [click, setClick] = useState(false);
@@ -49,9 +48,6 @@ const ProductCard = ({data}) => {
       }
     }
   };
-
-  const name = data.name
-  const nameProduct = name.replace(/\s+/g, "-")
   
   return (
     <>

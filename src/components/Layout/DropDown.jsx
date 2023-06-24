@@ -29,9 +29,11 @@ const DropDown = ({ selectCategory }) => {
             className={`${styles.normalFlex}`}
             onClick={() => selectCategory(item._id)}
           >
+            <Link to={`/product/?category=${item.name}`}>
               <h3 className="m-3 flex  cursor-pointer select-none">
                 {item.name}
               </h3>
+            </Link>
           </div>
         ))}
     </div>

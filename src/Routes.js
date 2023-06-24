@@ -3,11 +3,14 @@ import SignupPage from '../src/pages/SignupPage.jsx'
 import HomePage from '../src/pages/HomePage.jsx'
 import ProductsPage from "./pages/ProductsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
-
+import CheckoutPage from "./pages/CheckoutPage.jsx"
+import PaymentPage from "./pages/PaymentPage.jsx"
 export {
     LoginPage,
     SignupPage,
     HomePage,
     ProductsPage,
-    ProfilePage
+    ProfilePage,
+    CheckoutPage,
+    PaymentPage
 };
