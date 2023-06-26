@@ -9,6 +9,7 @@ import {
   ProfilePage,
   CheckoutPage,
   PaymentPage,
+  OrderSuccessPage
 } from "./Routes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/sign-up" element={<SignupPage />} />
             <Route path="/product" element={<ProductsPage />} />
+            <Route path="/order/success" element={<OrderSuccessPage />} />
             <Route
               path="/profile"
               element={
