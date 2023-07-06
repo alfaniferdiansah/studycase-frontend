@@ -30,6 +30,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const addToWishlistHandler = (data) => {
     setClick(!click);
     dispatch(addToWishlist(data));
+    toast.success("Item added to wishlist successfully!");
   };
 
   const addToCartHandler = (id) => {
@@ -37,9 +38,9 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     if (isItemExists) {
       toast.error("Item already in cart!");
     } else {
-      const cartData = { ...data};
-      dispatch(addTocart(cartData));
-      toast.success("Item added to cart successfully!");
+        const cartData = { ...data, qty: 1 };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
     }
   };
 

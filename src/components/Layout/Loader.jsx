@@ -10,11 +10,18 @@ const Loader = () => {
     animationData: animationData,
     loop: true,
     autoplay: true,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
 
   const { View } = useLottie(options, style);
 
-  return View;
+  return(
+    <div className="w-full h-screen flex items-center justify-center">
+      {View}
+    </div>
+  )
 };
 
 export default Loader;

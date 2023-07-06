@@ -28,7 +28,7 @@ const Tags = () => {
       </div>
       <div
         className={`${styles.section} bg-[hsl(27,96%,53%)] p-6 rounded-lg mb-12`}
-        id="categories"
+        id="tags"
       >
         <div className="grid grid-cols-1 gap-[5px] md:grid-cols-2 md:gap-[10px] lg:grid-cols-4 lg:gap-[20px] xl:grid-cols-5 xl:gap-[30px]">
           {data &&
@@ -42,7 +42,7 @@ const Tags = () => {
                   key={item._id}
                   onClick={() => handleSubmit(item)}
                 >
-                  <h5 className={`font-bold text-[18px] leading-[1.3]`}>
+                  <h5 className={`font-bold text-[18px] leading-[1.3] text-[#fff]`}>
                     {item.name}
                   </h5>
                 </div>

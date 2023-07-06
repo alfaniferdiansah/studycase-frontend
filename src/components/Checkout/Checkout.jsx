@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import styles from "../../styles/styles"
 import { City, State } from "country-state-city";
 import { RxCross1 } from "react-icons/rx";
+import { IoIosArrowDown } from "react-icons/io";
 
 const Checkout = () => {
   const user = useSelector(selectUser);
@@ -264,13 +265,13 @@ const ShippingInfo = ({
       </form>
       <div className="w-full flex justify-between">
         <h5
-          className="text-[18px] cursor-pointer inline-block"
+          className="text-[18px] font-bold cursor-pointer text-[#3473c7dd] inline-block"
           onClick={() => setUserInfo(!userInfo)}
         >
           Choose from saved address
         </h5>
           <div
-            className=" w-[100px] bg-[#b6c0fa] h-[40px] mr-4 mt-2 flex items-center justify-center cursor-pointer !rounded-md"
+            className=" w-[100px] bg-[#acc6ecf8] h-[40px] mr-4 mt-2 flex items-center justify-center cursor-pointer !rounded-md"
             onClick={() => setOpenAdd(true)}
           >
             <span className="text-black">Add New</span>

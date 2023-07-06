@@ -78,18 +78,15 @@ const Header = ({ activeHeading }) => {
               <img src={logo} width={40} height={40} alt="logo" />
             </Link>
           </div>
+          {!auth ? (
           <div className="w-[45%] relative ml-12 pl-5">
             <input
-              type="text"
+              type="search"
               placeholder="Search Product..."
               value={searchTerm}
               onChange={handleSearchChange}
               onClick={() => setOpenSeacrh(true)}
               className="h-[40px] w-full px-2 border-[hsl(36,84%,51%)] border-[2px] rounded-md"
-            />
-            <AiOutlineSearch
-              size={30}
-              className="absolute right-2 top-1.5 cursor-pointer"
             />
             {openSeacrh && openSeacrh.length !== 0 ? (
               <div className="fixed overflow-y-scroll h-[50%] w-[39%] bg-slate-50 shadow-sm-2 z-[9] p-4">
@@ -120,7 +117,48 @@ const Header = ({ activeHeading }) => {
               </div>
             ) : null}
           </div>
-          <div className={`${styles.button}`}>
+          ): (
+            <div className="w-[74%] flex justify-start">
+            <input
+              type="search"
+              placeholder="Search Product..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onClick={() => setOpenSeacrh(true)}
+              className="h-[40px] w-[60%] px-2 border-[hsl(36,84%,51%)] border-[2px] rounded-md"
+            />
+            {openSeacrh && openSeacrh.length !== 0 ? (
+              <div className="fixed overflow-y-scroll h-[50%] w-[39%] bg-slate-50 shadow-sm-2 z-[9] p-4">
+                <div className="flex justify-end">
+                  <RxCross1
+                    size={15}
+                    className="ml-3 mb-2 cursor-pointer"
+                    onClick={() => setOpenSeacrh(false)}
+                  />
+                </div>
+                {searchData &&
+                  searchData.map((i) => {
+                    return (
+                      <div key={i._id}>
+                      <Link to={`/product/${i._id}`}>
+                        <div className="w-full flex items-start-py-3">
+                          <img
+                            src={`${i.image}`}
+                            alt=""
+                            className="w-[40px] h-[40px] mr-[10px]"
+                          />
+                          <h1>{i.name.length > 50 ? i.name.slice(0, 50) + "..." : i.name}</h1>
+                        </div>
+                      </Link>
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : null}
+          </div>
+          )}
+          {!auth ? (
+            <div className={`${styles.button}`}>
             <Link to="/sign-up">
               <h1 className="text-[#fff] flex items-center">
                 {"Sign Up"}
@@ -128,6 +166,7 @@ const Header = ({ activeHeading }) => {
               </h1>
             </Link>
           </div>
+          ): null}
         </div>
       </div>
       <div
@@ -243,6 +282,13 @@ const Header = ({ activeHeading }) => {
               </span>
             </div>
           </div>
+
+          {/* cart popup */}
+          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+          {/* wishlist popup */}
+          {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
+
         </div>
 
         {/* header sidebar */}
@@ -252,9 +298,9 @@ const Header = ({ activeHeading }) => {
               <div className="w-full justify-between flex pr-3">
                 <div>
                   <div className="relative mr-[15px]"
-                    onClick={() => setOpenWishlist(true)}
+                    onClick={() => setOpenWishlist(true) || setOpen(false)}
                   >
-                    <AiOutlineHeart size={30} className="mt-3 ml-3" />
+                    <AiOutlineHeart size={30} className="mt-3 ml-3 cursor-pointer" />
                     <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                       {wishlist && wishlist.length}
                     </span>
@@ -328,18 +374,7 @@ const Header = ({ activeHeading }) => {
                   </Link>
                 </div>
               </div>
-              ) : (
-              <div className=" w-full h-[60%] flex items-end">
-                <div className={`${styles.button} w-[38%] h-[10%] ml-4`}>
-                  <Link to="/sign-up">
-                    <h1 className="text-[#fff] flex items-center">
-                      {"Sign Up"}
-                      <IoIosArrowForward className="ml-1" />
-                    </h1>
-                  </Link>
-                </div>
-              </div>
-              )}
+              ) : null }
             </div>
           </div>
         )}

@@ -15,7 +15,7 @@ import {
 } from "react-icons/ai";
 import { DataGrid } from "@material-ui/data-grid";
 import { Button } from "@material-ui/core";
-import { MdTrackChanges, MdUpdate } from "react-icons/md";
+import { MdUpdate } from "react-icons/md";
 import { City, State } from "country-state-city";
 import { RxCross1 } from "react-icons/rx";
 
@@ -30,7 +30,6 @@ const ProfileContent = ({ active }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log(user);
     e.preventDefault();
     axios
       .patch(`/user/${user._id}`, {
@@ -173,7 +172,7 @@ const AllOrders = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [dispatch, user._id]);
 
   const totalPrice = (cart) => {
     let total = 0;
@@ -253,7 +252,7 @@ const AllOrders = () => {
       <DataGrid
         rows={row}
         columns={columns}
-        pageSize={10}
+        pageSize={20}
         disableSelectionOnClick
         autoHeight
       />
@@ -329,7 +328,7 @@ const Address = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [dispatch, user._id]);
 
   const removeAddress = async (id) => {
     try {
@@ -372,8 +371,9 @@ const Address = () => {
                         choose your provincy
                       </option>
                       {State &&
-                        State.getStatesOfCountry("ID").map((item) => (
+                        State.getStatesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className="block pb-2"
                             value={item.name}
                           >
@@ -396,8 +396,9 @@ const Address = () => {
                         choose your city
                       </option>
                       {City &&
-                        City.getCitiesOfCountry("ID").map((item) => (
+                        City.getCitiesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className={"block pb-2"}
                             value={item.name}
                           >
@@ -481,8 +482,9 @@ const Address = () => {
                         choose your provincy
                       </option>
                       {State &&
-                        State.getStatesOfCountry("ID").map((item) => (
+                        State.getStatesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className="block pb-2"
                             value={item.name}
                           >
@@ -505,8 +507,9 @@ const Address = () => {
                         choose your city
                       </option>
                       {City &&
-                        City.getCitiesOfCountry("ID").map((item) => (
+                        City.getCitiesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className={"block pb-2"}
                             value={item.name}
                           >
@@ -592,7 +595,7 @@ const Address = () => {
             <div className="flex justify-center">
               <h6 className="font-[600] 800px:text-[unset]">{item.provinsi}</h6>
             </div>
-            <div className="min-w-[10%] flex items-center justify-between pl-8">
+            <div className="min-w-[20%] flex items-center justify-between pl-8">
               <AiOutlineDelete
                 size={25}
                 className="cursor-pointer"
