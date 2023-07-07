@@ -25,7 +25,7 @@ const ProductsPage = () => {
         console.log(error);
       });
   }, []);
-  
+
   useEffect(() => {
     if (categoryData === null && tagData.length === 0) {
       setData(product);
@@ -57,17 +57,19 @@ const ProductsPage = () => {
         <br />
         <Tags />
         <br />
-        <div className={`${styles.section}`}>
-          <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
-            {data &&
-              data.map((i) => <ProductCard data={i} key={i._id} />)}
+        {data && data.length > 0 ? (
+          <div className={`${styles.section}`}>
+            <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
+              {data.map((i) => (
+                <ProductCard data={i} key={i._id} />
+              ))}
+            </div>
           </div>
-          {data && data.length === 0 ? (
-            <h1 className="text-center w-full pb-[100px] text-[20px]">
-              No products Found!
-            </h1>
-          ) : null}
-        </div>
+        ) : (
+          <h1 className="text-center w-full pb-[100px] text-[20px]">
+            No products Found!
+          </h1>
+        )}
         <Footer />
       </div>
     </>
