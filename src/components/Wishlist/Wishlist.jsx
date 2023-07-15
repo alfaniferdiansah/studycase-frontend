@@ -7,10 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishlist } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
+import { selectCart, selectWishlist } from "../../redux/userSelector";
 
 const Wishlist = ({ setOpenWishlist }) => {
-  const { cart } = useSelector((state) => state.cart);
-  const { wishlist } = useSelector((state) => state.wishlist);
+  const {cart} = useSelector(selectCart);
+  const {wishlist} = useSelector(selectWishlist);
   const dispatch = useDispatch();
 
   const removeFromWishlistHandler = (data) => {

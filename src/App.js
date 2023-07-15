@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
@@ -9,52 +9,38 @@ import {
   ProfilePage,
   CheckoutPage,
   PaymentPage,
-  OrderSuccessPage
+  OrderSuccessPage,
+  ProductsDetailsPage,
+  InvoicePage
 } from "./Routes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { selectLoading } from "./redux/userSelector";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import axios from "./axios";
 
 const App = () => {
   const loading = useSelector(selectLoading);
-  const [stripeApikey, setStripeApiKey] = useState("");
 
-  async function getStripeApikey() {
-    const { data } = await axios.get(`/payment/stripeapikey`);
-    setStripeApiKey(data.stripeApikey);
-  }
-
-  useEffect(() => {
-    getStripeApikey()
-  }, []);
   return (
-    <div>
+    <>
       {loading ? null : (
         <BrowserRouter>
-          {stripeApikey && (
-            <Elements stripe={loadStripe(stripeApikey)}>
-              <Routes>
-                <Route
-                  path="/payment"
-                  element={
-                    <ProtectedRoute>
-                      <PaymentPage />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </Elements>
-          )}
           <Routes>
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/sign-up" element={<SignupPage />} />
             <Route path="/product" element={<ProductsPage />} />
+            <Route path="/product/:id" element={<ProductsDetailsPage />} />
+            <Route path="/invoice/:id" element={<InvoicePage />} />
             <Route path="/order/success" element={<OrderSuccessPage />} />
             <Route
               path="/profile"
@@ -87,7 +73,7 @@ const App = () => {
           />
         </BrowserRouter>
       )}
-    </div>
+    </>
   );
 };
 

@@ -6,24 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addTocart } from "../../../redux/actions/cart";
 import { addToWishlist, removeFromWishlist } from "../../../redux/actions/wishlist";
+import { selectCart, selectWishlist } from "../../../redux/userSelector";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
-  const { cart } = useSelector((state) => state.cart);
-  const {wishlist} = useSelector((state) => state.wishlist);
-  const [count, setCount] = useState(1);
+  const {cart} = useSelector(selectCart);
+  const {wishlist} = useSelector(selectWishlist);
   const [click, setClick] = useState(false);
-  const [select, setSelect] = useState(false);
   const dispatch = useDispatch();
-
-  const decrementCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
-    }
-  };
-
-  const incrementCount = () => {
-    setCount(count + 1);
-  };
 
   useEffect(() => {
     if (wishlist && wishlist.find((i) => i.id === data.id)) {
@@ -41,6 +30,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const addToWishlistHandler = (data) => {
     setClick(!click);
     dispatch(addToWishlist(data));
+    toast.success("Item added to wishlist successfully!");
   };
 
   const addToCartHandler = (id) => {
@@ -48,20 +38,16 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     if (isItemExists) {
       toast.error("Item already in cart!");
     } else {
-      if (data.stock < count) {
-        toast.error("Product stock limited!");
-      } else {
-        const cartData = { ...data, qty: count };
+        const cartData = { ...data, qty: 1 };
         dispatch(addTocart(cartData));
         toast.success("Item added to cart successfully!");
-      }
     }
   };
 
   return (
     <div className="bg-[#fff]">
       {data ? (
-        <div className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
+        <div key={data._id} className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
           <div className="w-[90%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-white rounded-md shadow-sm relative p-4">
             <RxCross1
               size={30}
@@ -90,23 +76,6 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   </h5>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
-                  <div>
-                    <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={decrementCount}
-                    >
-                      -
-                    </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[11px]">
-                      {count}
-                    </span>
-                    <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={incrementCount}
-                    >
-                      +
-                    </button>
-                  </div>
                   <div>
                     {click ? (
                       <AiFillHeart

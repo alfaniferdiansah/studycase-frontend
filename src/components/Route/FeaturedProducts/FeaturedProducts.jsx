@@ -49,7 +49,7 @@ const FeaturedProducts = () => {
            {
             data && data.length !== 0 &&(
               <>
-               {data && data.map((item, index) => <ProductCard data={item} key={index} />)}
+               {data && data.map((item, index) => <ProductCard data={item} key={item._id} />)}
               </>
             )
            }

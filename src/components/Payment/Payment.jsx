@@ -2,27 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 import { useEffect } from "react";
-import {
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { RxCross1 } from "react-icons/rx";
 import { selectUser } from "../../redux/userSelector";
 import axios from "../../axios";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [cardNumber, setCardNumber] = useState("");
+  const [expDate, setExpDate] = useState("");
+  const [cvc, setCvc] = useState("");
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
 
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
@@ -31,49 +22,42 @@ const Payment = () => {
 
   const order = {
     cart: orderData?.cart,
+    delivery_fee: orderData?.shipping,
     delivery_address: orderData?.shippingAddress,
     user: user && user,
+    sub_total: orderData?.subTotalPrice,
     totalPrice: orderData?.totalPrice,
-  };
-
-  const paymentData = {
-    amount: Math.round(orderData?.totalPrice * 100),
   };
 
   const paymentHandler = async (e) => {
     e.preventDefault();
-    try {
+
       const config = {
         headers: {
           "Content-Type": "application/json",
         },
       };
 
-
-      if (!stripe || !elements) return;
-      const result = await stripe.confirmCardPayment(config , {
-        payment_method: {
-          card: elements.getElement(CardNumberElement),
-        },
-      });
-          order.paymnentInfo = {
-            id: result.paymentIntent.id,
-            status: result.paymentIntent.status,
-            type: "Credit Card",
-          };
-
-          await axios.post(`/order/${user._id}`, order, config)
-          .then((res) => {
-            setOpen(false);
-            navigate("/order/success");
-            toast.success("Order successful!");
-            localStorage.setItem("cartItems", JSON.stringify([]));
-            localStorage.setItem("latestOrder", JSON.stringify([]));
-            window.location.reload();
-          })
-      }catch(error) {
-        toast.error(error);
+      order.paymentInfo = {
+        id: cardNumber,
+        status: "On Processing",
+        type: "Credit Card",
       };
+
+      await axios
+      .post(`/order/${user._id}`, order, config)
+      .then((res) => {
+        console.log(res);
+        navigate("/order/success");
+        toast.success("Order successful!");
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+        // window.location.reload();
+      })
+      .catch((error) => {
+      console.log(error);
+      toast.error("Order failed!!");
+    })
   };
 
   const cashOnDeliveryHandler = async (e) => {
@@ -85,25 +69,20 @@ const Payment = () => {
       },
     };
 
-    const order = {
-      cart: orderData?.cart,
-      delivery_address: orderData?.shippingAddress,
-      user: user && user,
-      totalPrice: orderData?.totalPrice,
-      paymentInfo: {
-        type: "Cash On Delivery",
-      },
+    order.paymentInfo = {
+      status: "On Processing",
+      type: "Cash on Delivery",
     };
 
     await axios
       .post(`/order/${user._id}`, order, config)
       .then((res) => {
-        setOpen(false);
+        console.log(res);
         navigate("/order/success");
         toast.success("Order successful!");
         localStorage.setItem("cartItems", JSON.stringify([]));
         localStorage.setItem("latestOrder", JSON.stringify([]));
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -117,8 +96,12 @@ const Payment = () => {
         <div className="w-full 800px:w-[65%]">
           <PaymentInfo
             user={user}
-            open={open}
-            setOpen={setOpen}
+            expDate={expDate}
+            setExpDate={setExpDate}
+            cardNumber={cardNumber}
+            setCardNumber={setCardNumber}
+            cvc={cvc}
+            setCvc={setCvc}
             paymentHandler={paymentHandler}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
           />
@@ -131,7 +114,17 @@ const Payment = () => {
   );
 };
 
-const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
+const PaymentInfo = ({ 
+  user, 
+  paymentHandler,
+  expDate,
+  setExpDate,
+  cardNumber,
+  setCardNumber,
+  cvc,
+  setCvc,
+  cashOnDeliveryHandler 
+}) => {
   const [select, setSelect] = useState(1);
 
   return (
@@ -161,15 +154,15 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
                   <label className="block pb-2">Name On Card</label>
                   <input
                     required
-                    placeholder={user && user.name}
+                    readOnly
                     className={`${styles.input} !w-[95%] text-[#444]`}
                     value={user && user.name}
                   />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">Exp Date</label>
-                  <CardExpiryElement
-                    className={`${styles.input}`}
+                  <input
+                    className={`${styles.input} !w-[95%] text-[#444]`}
                     options={{
                       style: {
                         base: {
@@ -186,6 +179,10 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
                         },
                       },
                     }}
+                    required
+                    placeholder="MM/YY"
+                    value={expDate}
+                    onChange={(e) => setExpDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -193,8 +190,8 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
                   <label className="block pb-2">Card Number</label>
-                  <CardNumberElement
-                    className={`${styles.input} !h-[35px] !w-[95%]`}
+                  <input
+                    className={`${styles.input} !w-[95%] !h-[35px]`}
                     options={{
                       style: {
                         base: {
@@ -211,11 +208,15 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
                         },
                       },
                     }}
+                    required
+                    placeholder="1234/1234/1234/1234"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(e.target.value)}
                   />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">CVV</label>
-                  <CardCvcElement
+                  <input
                     className={`${styles.input} !h-[35px]`}
                     options={{
                       style: {
@@ -233,6 +234,10 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
                         },
                       },
                     }}
+                    required
+                    placeholder="123"
+                    value={cvc}
+                    onChange={(e) => setCvc(e.target.value)}
                   />
                 </div>
               </div>
@@ -253,9 +258,9 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
         <div className="flex w-full pb-5 border-b mb-2">
           <div
             className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
-            onClick={() => setSelect(3)}
+            onClick={() => setSelect(2)}
           >
-            {select === 3 ? (
+            {select === 2 ? (
               <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
             ) : null}
           </div>
@@ -265,7 +270,7 @@ const PaymentInfo = ({ user, paymentHandler, cashOnDeliveryHandler }) => {
         </div>
 
         {/* cash on delivery */}
-        {select === 3 ? (
+        {select === 2 ? (
           <div className="w-full flex">
             <form className="w-full" onSubmit={cashOnDeliveryHandler}>
               <input

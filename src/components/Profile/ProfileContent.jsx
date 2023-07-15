@@ -3,7 +3,7 @@ import { FaUserCircle } from "react-icons/fa";
 import styles from "../../styles/styles";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setAddress, setAuth, setOrder } from "../../redux/actions/userAction";
+import { setAddress, setAuth } from "../../redux/actions/userAction";
 import axios from "../../axios";
 import { Link, useNavigate } from "react-router-dom";
 import { selectUser } from "../../redux/userSelector";
@@ -15,7 +15,7 @@ import {
 } from "react-icons/ai";
 import { DataGrid } from "@material-ui/data-grid";
 import { Button } from "@material-ui/core";
-import { MdTrackChanges, MdUpdate } from "react-icons/md";
+import { MdUpdate } from "react-icons/md";
 import { City, State } from "country-state-city";
 import { RxCross1 } from "react-icons/rx";
 
@@ -30,7 +30,6 @@ const ProfileContent = ({ active }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log(user);
     e.preventDefault();
     axios
       .patch(`/user/${user._id}`, {
@@ -148,15 +147,8 @@ const ProfileContent = ({ active }) => {
         </div>
       )}
 
-      {/* TrackOrder */}
-      {active === 3 && (
-        <div>
-          <TrackOrders />
-        </div>
-      )}
-
       {/*  user Address */}
-      {active === 4 && (
+      {active === 3 && (
         <div>
           <Address />
         </div>
@@ -168,30 +160,17 @@ const ProfileContent = ({ active }) => {
 const AllOrders = () => {
   const user = useSelector(selectUser);
   const [data, setData] = useState([]);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(user);
     axios
-      .get(`/order/user/${user._id}`)
+      .get(`/invoice/user/${user._id}`)
       .then(function (response) {
-        dispatch(setOrder(response.data.data));
         setData(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
-
-  const totalPrice = (cart) => {
-    let total = 0;
-
-    cart.forEach((item) => {
-      total += item.price * item.qty;
-    });
-
-    return total;
-  };
+  }, [user._id]);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -202,7 +181,7 @@ const AllOrders = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
+        return params.getValue(params.id, "status") === "Paid"
           ? "greenColor"
           : "redColor";
       },
@@ -233,7 +212,7 @@ const AllOrders = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/user/order/${params.id}`}>
+            <Link to={`/invoice/${params.id}`}>
               <Button>
                 <AiOutlineArrowRight size={20} />
               </Button>
@@ -250,9 +229,9 @@ const AllOrders = () => {
     data.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.cart.length + " items",
-        total: totalPrice(item.cart).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }),
-        status: item.status,
+        itemsQty: item.order.cart.length + " items",
+        total: item.total,
+        status: item.payment_status,
       });
     });
 
@@ -261,109 +240,7 @@ const AllOrders = () => {
       <DataGrid
         rows={row}
         columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-        autoHeight
-      />
-    </div>
-  );
-};
-
-const TrackOrders = () => {
-  const user = useSelector(selectUser);
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get(`/order/user/${user._id}`)
-      .then(function (response) {
-        console.log(response);
-        setData(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
-
-  const totalPrice = (cart) => {
-    let total = 0;
-
-    cart.forEach((item) => {
-      total += item.price * item.qty;
-    });
-
-    return total;
-  };
-
-  const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
-    },
-    {
-      field: "itemsQty",
-      headerName: "Items Qty",
-      type: "number",
-      minWidth: 130,
-      flex: 0.7,
-    },
-
-    {
-      field: "total",
-      headerName: "Total",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-    },
-
-    {
-      field: " ",
-      flex: 1,
-      minWidth: 150,
-      headerName: "",
-      type: "number",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/user/track/order/${params.id}`}>
-              <Button>
-                <MdTrackChanges size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
-    },
-  ];
-
-  const row = [];
-
-  data &&
-    data.forEach((item) => {
-      row.push({
-        id: item._id,
-        itemsQty: item.cart.length,
-        total: totalPrice(item.cart).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }),
-        status: item.status,
-      });
-    });
-
-  return (
-    <div className="pl-8 pt-1">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={10}
+        pageSize={20}
         disableSelectionOnClick
         autoHeight
       />
@@ -385,7 +262,6 @@ const Address = () => {
   const dispatch = useDispatch();
 
   const handleSubmitAdd = async (e) => {
-    console.log(user);
     e.preventDefault();
     axios
       .post(`/address/${user._id}`, {
@@ -409,8 +285,6 @@ const Address = () => {
   };
 
   const handleSubmitUpdate = async (id) => {
-    console.log(user);
-    console.log(id);
     axios
       .patch(`/address/${id}/user/${user._id}`, {
         nama: user.name,
@@ -433,7 +307,6 @@ const Address = () => {
   };
 
   useEffect(() => {
-    console.log(user);
     axios
       .get(`/address/user/${user._id}`)
       .then(function (response) {
@@ -443,7 +316,7 @@ const Address = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [dispatch, user._id]);
 
   const removeAddress = async (id) => {
     try {
@@ -486,8 +359,9 @@ const Address = () => {
                         choose your provincy
                       </option>
                       {State &&
-                        State.getStatesOfCountry("ID").map((item) => (
+                        State.getStatesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className="block pb-2"
                             value={item.name}
                           >
@@ -510,8 +384,9 @@ const Address = () => {
                         choose your city
                       </option>
                       {City &&
-                        City.getCitiesOfCountry("ID").map((item) => (
+                        City.getCitiesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className={"block pb-2"}
                             value={item.name}
                           >
@@ -595,8 +470,9 @@ const Address = () => {
                         choose your provincy
                       </option>
                       {State &&
-                        State.getStatesOfCountry("ID").map((item) => (
+                        State.getStatesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className="block pb-2"
                             value={item.name}
                           >
@@ -619,8 +495,9 @@ const Address = () => {
                         choose your city
                       </option>
                       {City &&
-                        City.getCitiesOfCountry("ID").map((item) => (
+                        City.getCitiesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className={"block pb-2"}
                             value={item.name}
                           >
@@ -706,7 +583,7 @@ const Address = () => {
             <div className="flex justify-center">
               <h6 className="font-[600] 800px:text-[unset]">{item.provinsi}</h6>
             </div>
-            <div className="min-w-[10%] flex items-center justify-between pl-8">
+            <div className="min-w-[20%] flex items-center justify-between pl-8">
               <AiOutlineDelete
                 size={25}
                 className="cursor-pointer"

@@ -23,13 +23,15 @@ const Hero = () => {
           quidem asperiores, laudantium temporibus soluta optio consequatur{" "}
           <br /> aliquam deserunt officia. Dolorum saepe nulla provident.
         </p>
-        <Link to="/product" className="inline-block flex justify-center">
+        <div className="flex justify-center">
             <div className={`${styles.button} mt-5`}>
+              <Link to="/product">
                  <span className="text-[#fff] font-[Poppins] text-[18px]">
                     Shop Now
                  </span>
+              </Link>
             </div>
-        </Link>
+        </div>
       </div>
     </div>
   );

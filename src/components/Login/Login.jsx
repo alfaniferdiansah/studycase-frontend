@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { server } from "../../server";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { selectAuth, selectLoading } from "../../redux/userSelector";
 import { setAuth, setLoading, setToken, setUser } from "../../redux/actions/userAction";
 

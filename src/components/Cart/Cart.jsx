@@ -6,11 +6,10 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
-import { server } from "../../server";
-import { selectAuth } from "../../redux/userSelector";
+import { selectAuth, selectCart } from "../../redux/userSelector";
 
 const Cart = ({ setOpenCart }) => {
-  const { cart } = useSelector((state) => state.cart);
+  const {cart} = useSelector(selectCart);
   const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
 

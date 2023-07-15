@@ -7,7 +7,6 @@ import ProfileSideBar from "../components/Profile/ProfileSideBar.jsx";
 import ProfileContent from "../components/Profile/ProfileContent.jsx";
 
 const ProfilePage = () => {
-    // const loading = useSelector(selectLoading)
     const [active, setActive] = useState(1);
   
     return (

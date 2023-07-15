@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/userSelector";
+import { selectCart, selectUser } from "../../redux/userSelector";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axios";
 import { toast } from "react-toastify";
 import styles from "../../styles/styles"
 import { City, State } from "country-state-city";
-import { setUser } from "../../redux/actions/userAction";
 import { RxCross1 } from "react-icons/rx";
+import { IoIosArrowDown } from "react-icons/io";
 
 const Checkout = () => {
   const user = useSelector(selectUser);
-  const { cart } = useSelector((state) => state.cart);
+  const {cart} = useSelector(selectCart);
   const [userInfo, setUserInfo] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const [data, setData] = useState([]);
@@ -170,8 +170,8 @@ const ShippingInfo = ({
             <label className="block pb-2">Full Name</label>
             <input
               type="text"
-              value={user && user.name}
-              required
+              value={user.name}
+              readOnly
               className={`${styles.input} !w-[95%] bg-[rgb(197,191,255)]`}
             />
           </div>
@@ -179,8 +179,8 @@ const ShippingInfo = ({
             <label className="block pb-2">Email Address</label>
             <input
               type="email"
-              value={user && user.email}
-              required
+              value={user.email}
+              readOnly
               className={`${styles.input} !w-[95%] bg-[rgb(197,191,255)]`}
             />
           </div>
@@ -198,8 +198,8 @@ const ShippingInfo = ({
                 Choose your provincy
               </option>
               {State &&
-                State.getStatesOfCountry("ID").map((item) => (
-                  <option value={item.name}>
+                State.getStatesOfCountry("ID").map((item, index) => (
+                  <option key={index} value={item.name}>
                     {item.name}
                   </option>
                 ))}
@@ -216,8 +216,8 @@ const ShippingInfo = ({
                 Choose your City
               </option>
               {City &&
-                City.getCitiesOfCountry("ID").map((item) => (
-                  <option value={item.name}>
+                City.getCitiesOfCountry("ID").map((item, index) => (
+                  <option key={index} value={item.name}>
                     {item.name}
                   </option>
                 ))}
@@ -265,13 +265,13 @@ const ShippingInfo = ({
       </form>
       <div className="w-full flex justify-between">
         <h5
-          className="text-[18px] cursor-pointer inline-block"
+          className="text-[18px] font-bold cursor-pointer text-[#3473c7dd] inline-block"
           onClick={() => setUserInfo(!userInfo)}
         >
-          Choose From saved address
+          Choose from saved address
         </h5>
           <div
-            className=" w-[100px] bg-[#b6c0fa] h-[40px] mr-4 mt-2 flex items-center justify-center rounded-xl cursor-pointer !rounded-md"
+            className=" w-[100px] bg-[#acc6ecf8] h-[40px] mr-4 mt-2 flex items-center justify-center cursor-pointer !rounded-md"
             onClick={() => setOpenAdd(true)}
           >
             <span className="text-black">Add New</span>
@@ -281,7 +281,7 @@ const ShippingInfo = ({
         <div>
           {data &&
             data.map((item, index) => (
-              <div className="w-full flex mt-1">
+              <div key={index} className="w-full flex mt-1">
                 <input
                   type="checkbox"
                   className="mr-3"
@@ -328,8 +328,9 @@ const ShippingInfo = ({
                         choose your provincy
                       </option>
                       {State &&
-                        State.getStatesOfCountry("ID").map((item) => (
+                        State.getStatesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className="block pb-2"
                             value={item.name}
                           >
@@ -352,8 +353,9 @@ const ShippingInfo = ({
                         choose your city
                       </option>
                       {City &&
-                        City.getCitiesOfCountry("ID").map((item) => (
+                        City.getCitiesOfCountry("ID").map((item, index) => (
                           <option
+                            key={index}
                             className={"block pb-2"}
                             value={item.name}
                           >
